@@ -4,7 +4,11 @@ import getProfile from "../controllers/userprofile.js";
 import { sendotp, signup, login } from "../controllers/Auth.js";
 import multer from "multer";
 import { AddImageTocloud, getcreations } from "../controllers/functionality.js";
-import { generatelink } from "../controllers/twitterconnect.js";
+import {
+  callback1,
+  generatelink,
+  generatelink1,
+} from "../controllers/twitterconnect.js";
 import { callback } from "../controllers/twitterconnect.js";
 
 const storage = multer.diskStorage({
@@ -25,6 +29,8 @@ router.post("/login", login);
 router.post("/upload", upload.single("file"), AddImageTocloud);
 router.get("/profile", auth, getProfile);
 router.get("/getcreations", auth, getcreations);
+router.get("/twitfileupload", generatelink1);
+router.get("/fileuploadcallback", callback1);
 router.get("/twitterauth", generatelink);
 router.get("/twittercallback", callback);
 export default router;
