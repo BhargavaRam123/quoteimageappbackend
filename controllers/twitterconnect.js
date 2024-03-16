@@ -1,88 +1,161 @@
 import { TwitterApi } from "twitter-api-v2";
 import { Twitter } from "../models/twitterauth.model.js";
-import { download } from "../utils/twitterutils.js";
-const twitterClient = new TwitterApi({
-  clientId: "ZGdULUNBbVJaRjZxNm84MjBSdHE6MTpjaQ",
-  clientSecret: "SCGOcIY2zvrHkqgQM3D1xc7f-MSGjqx7U8KO4C9GCDZGLxIVft",
-  // appKey: "4murSs2SbEiot9UUdzsDKefw8",
-  // accessSecret: "izxJSm1Hcf47yIqWEwhEOcJhXItSWpzKITvC97kTSw2NM",
-});
-const callbackURL = "http://127.0.0.1:3001/api/auth/twittercallback";
-// auth
-export async function generatelink(request, response) {
-  console.log("generate link function called");
-  const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(
-    callbackURL,
-    { scope: ["tweet.read", "tweet.write", "users.read", "offline.access"] }
-  );
-  twitterClient.console.log(url);
+import { text } from "express";
 
-  // // store verifier
-  // await dbRef.set({ codeVerifier, state });
-  const twitter = await Twitter.create({
-    codeVerifier: codeVerifier,
-    state: state,
-  });
-
-  response.redirect(url);
+export async function generatelink1(req, res) {
+  try {
+    const { email } = req.body;
+    const client = new TwitterApi({
+      appKey: "EKxaPZOIE2hW3mQPxXRqOIpau",
+      appSecret: "SoL7rehIOf2K5gi7wM9UvdUTxxmtWOEvgzYBh1AvATBpFihBWT",
+    });
+    const callbackurl = "http://127.0.0.1:3001/api/auth/twittercallback";
+    console.log("generating link...");
+    const link = await client.generateAuthLink(callbackurl);
+    console.log("link is:", link);
+    const { oauth_token_secret, oauth_token } = link;
+    const twit = await Twitter.findOne({ email: email });
+    if (!twit) {
+      await Twitter.create({
+        email: email,
+        oauth_token_secret: oauth_token_secret,
+        oauth_token: oauth_token,
+      });
+    } else {
+      await Twitter.findOneAndUpdate(
+        { email: email },
+        {
+          oauth_token_secret: oauth_token_secret,
+          oauth_token: oauth_token,
+        }
+      );
+    }
+    // return res.redirect(link);
+  } catch (error) {
+    console.log("error occured in generate link :", error.message);
+    return res.json({
+      message: "error",
+    });
+  }
 }
 
-// callback
-
-export async function callback(req, res) {
-  const { state, code } = req.query;
-  console.log("callback called");
-  const twitteri = await Twitter.find();
-  console.log("database:", twitteri);
-  // const dbSnapshot = await dbRef.get();
-  // const { codeVerifier, state: storedState } = dbSnapshot.data();
-
-  // if (state !== storedState) {
-  //   return response.status(400).send('Stored tokens do not match!');
-  // }
-
-  const {
-    client: loggedClient,
-    accessToken,
-    refreshToken,
-  } = await twitterClient.loginWithOAuth2({
-    clientId: "ZGdULUNBbVJaRjZxNm84MjBSdHE6MTpjaQ",
-    clientSecret: "SCGOcIY2zvrHkqgQM3D1xc7f-MSGjqx7U8KO4C9GCDZGLxIVft",
-
-    appKey: "4murSs2SbEiot9UUdzsDKefw8",
-    accessSecret: "izxJSm1Hcf47yIqWEwhEOcJhXItSWpzKITvC97kTSw2NM",
-    code,
-    codeVerifier: twitteri[twitteri.length - 1].codeVerifier,
-    redirectUri: callbackURL,
-  });
-
-  // await dbRef.set({ accessToken, refreshToken });
-
-  // const { data } = await loggedClient.v2.me(); // start using the client if you want
-  // const { data } = await loggedClient.v2.tweet("@neymar  #3567");
-
-  // const uri =
-  //   "https://res.cloudinary.com/dok67xcxs/image/upload/v1710479719/1710479698135-138897469_file.jpg.png";
-  // const filename = "image.png";
-
-  // download(uri, filename, async function () {
+export async function callback1(req, res) {
   try {
-    console.log("started...");
-    const mediaId = await loggedClient.v1.uploadMedia("./image.png");
-    console.log("mediaid:", mediaId);
-    await loggedClient.v2.tweet({
-      text: "Hello worild! This is an image in Ukraine!",
+    console.log("callback funciton called");
+    const { oauth_token, oauth_verifier } = req.query;
+    // const arr = await Twitter.findOne({email});
+    const oauth_token_secret = arr[arr.length - 1].oauth_token_secret;
+    // console.log("oath_token", oauth_token, oauth_verifier);
+    // console.log("oath_secret:", oauth_token_secret);
+    if (!oauth_token || !oauth_verifier || !oauth_token_secret) {
+      return res
+        .status(400)
+        .send("You denied the app or your session expired!");
+    }
+    const client = new TwitterApi({
+      appKey: "EKxaPZOIE2hW3mQPxXRqOIpau",
+      appSecret: "SoL7rehIOf2K5gi7wM9UvdUTxxmtWOEvgzYBh1AvATBpFihBWT",
+      accessToken: oauth_token,
+      accessSecret: oauth_token_secret,
+    });
+
+    const {
+      client: loggedClient,
+      accessToken,
+      accessSecret,
+    } = await client.login(oauth_verifier);
+    console.log("uploading...");
+    const mediaid = await loggedClient.v1.uploadMedia("./image.png");
+    console.log("upload to the twitter server", mediaid);
+    return res.json({
+      user: accessToken,
+      status: "success",
+      response: mediaid,
+      message: "callback page",
+    });
+  } catch (error) {
+    console.log("error occured in callback function:", error.message);
+    return res.json({
+      message: "tweet not sent in the client side",
+    });
+  }
+}
+
+export async function generatelink(req, res) {
+  try {
+    const client = new TwitterApi({
+      clientId: "ZGdULUNBbVJaRjZxNm84MjBSdHE6MTpjaQ",
+      clientSecret: "LDUadVklPn30fRe7DqvOtkTIIeHBbz2JacJFhRLHm8EdjLkJmB",
+    });
+
+    const callbackurl = "http://127.0.0.1:3001/api/auth/twittercallback";
+    const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
+      callbackurl,
+      { scope: ["tweet.read", "tweet.write", "users.read", "offline.access"] }
+    );
+    await Twitter.create({
+      state: state,
+      codeVerifier: codeVerifier,
+    });
+    return res.json({
+      clickonme: url,
+      message: "url sent successfully",
+    });
+  } catch (error) {
+    console.log("error occured in the generatelink:", error.message);
+    return res.json({
+      message: "error occured",
+    });
+  }
+}
+export async function callback(req, res) {
+  try {
+    const callbackurl = "http://127.0.0.1:3001/api/auth/twittercallback";
+    const { state, code } = req.query;
+    const arr = await Twitter.find();
+    const codeVerifier = arr[arr.length - 1].codeVerifier;
+    const sessionState = arr[arr.length - 1].state;
+    if (!codeVerifier || !state || !sessionState || !code) {
+      return res
+        .status(400)
+        .send("You denied the app or your session expired!");
+    }
+    if (state !== sessionState) {
+      return res.status(400).send("Stored tokens didnt match!");
+    }
+
+    const client = new TwitterApi({
+      clientId: "ZGdULUNBbVJaRjZxNm84MjBSdHE6MTpjaQ",
+      clientSecret: "LDUadVklPn30fRe7DqvOtkTIIeHBbz2JacJFhRLHm8EdjLkJmB",
+    });
+
+    const {
+      client: loggedClient,
+      accessToken,
+      refreshToken,
+      expiresIn,
+    } = await client.loginWithOAuth2({
+      code,
+      codeVerifier,
+      redirectUri: callbackurl,
+    });
+    console.log("Sending image tweet......");
+    const resp = await loggedClient.v2.tweet({
+      text: "hello mf iam coding my ass off#234333",
       media: {
-        media_ids: [mediaId],
+        media_ids: ["1769075294386978816"],
       },
     });
-  } catch (e) {
-    console.log("error occured while sending data to twitter,", e.message);
-    return res.send({ message: "error occured" });
+    return res.json({
+      accessToken: accessToken,
+      refreshToken,
+      resp: resp,
+      message: "hello mf",
+    });
+  } catch (error) {
+    console.log("error occured in callback:", error.message);
+    return res.json({
+      error: error,
+    });
   }
-  // });
-  res.send({ message: "image uploaded " });
-  // res.send(data);
 }
-
-// tweet
