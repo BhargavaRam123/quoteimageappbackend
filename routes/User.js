@@ -11,7 +11,7 @@ import {
 } from "../controllers/twitterconnect.js";
 import { callback } from "../controllers/twitterconnect.js";
 
-const storage = multer.diskStorage({
+const storage1 = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
   },
@@ -20,16 +20,27 @@ const storage = multer.diskStorage({
     cb(null, `${uniqueSuffix}_${file.originalname}`);
   },
 });
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "tweetimage/");
+  },
+  filename: function (req, file, cb) {
+    console.log("did you uploaded the file");
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, `${uniqueSuffix}_${file.originalname}`);
+  },
+});
 
-const upload = multer({ storage });
+const upload1 = multer({ storage: storage1 });
+const upload2 = multer({ storage: storage2 });
 const router = express.Router();
 router.post("/sendotp", sendotp);
 router.post("/signup", signup);
 router.post("/login", login);
-router.post("/upload", upload.single("file"), AddImageTocloud);
+router.post("/upload", upload1.single("file"), AddImageTocloud);
 router.get("/profile", auth, getProfile);
 router.get("/getcreations", auth, getcreations);
-router.get("/twitfileupload", generatelink1);
+router.post("/twitfileupload", upload2.single("files"), generatelink1);
 router.get("/fileuploadcallback", callback1);
 router.get("/twitterauth", generatelink);
 router.get("/twittercallback", callback);

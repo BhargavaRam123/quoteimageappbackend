@@ -4,7 +4,7 @@ let twitterschema = new mongoose.Schema({
     type: String,
   },
   fileIdOnServer: {
-    type: Number,
+    type: String,
   },
   oauth_token: {
     type: String,
