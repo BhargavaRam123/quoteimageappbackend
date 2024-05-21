@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 let Imageschema = new mongoose.Schema({
+  imageid: {
+    type: String,
+    required: true,
+  },
   url: {
     type: String,
     required: true,

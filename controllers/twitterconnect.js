@@ -114,7 +114,9 @@ export async function callback1(req, res) {
 
 export async function generatelink(req, res) {
   try {
+    console.log(req.body)
     const { email } = req.body;
+    console.log("email is :",email)
     const client = new TwitterApi({
       clientId: "WmREOVdoeTUwUnFZaVJ2S0lyNWs6MTpjaQ",
       clientSecret: "36uQ9lZlFxeg8ERxrKBrz_4d70SpsmZeVgbsXLQYgYaufykJhI",
@@ -189,7 +191,7 @@ export async function callback(req, res) {
       message: "hello mf",
     });
   } catch (error) {
-    console.log("error occured in callback:", error.message);
+    console.log("error occured in callback:", error);
     return res.json({
       error: error,
     });

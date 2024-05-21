@@ -16,7 +16,11 @@ export async function AddImageTocloud(req, res) {
     filesarr = fs.readdirSync(foldername);
     const response = await Cloudinary(__dirname, filesarr);
 
-    var imgurl = await Image.create({ url: response, imgname: imgname });
+    var imgurl = await Image.create({
+      imageid: Math.ceil(Math.random() * 100090978789797),
+      url: response,
+      imgname: imgname,
+    });
 
     var user = await User.findOneAndUpdate(
       { email: email },
@@ -56,5 +60,24 @@ export async function getcreations(req, res) {
       error: error.message,
     });
     console.log("error in getcreations:", error.message);
+  }
+}
+
+export async function getcreationsbyid(req, res) {
+  try {
+    const { imageid } = req.body;
+    const image = await Image.findOne({
+      imageid: imageid,
+    });
+    return res.json({
+      image: image,
+      message: "image retrieved",
+    });
+  } catch (error) {
+    console.log("error occured in getcreationsbyid:", error.message);
+    return res.json({
+      message: "error occured in getcreationsbyid",
+      error: error.message,
+    });
   }
 }

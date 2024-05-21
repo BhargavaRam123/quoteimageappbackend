@@ -3,7 +3,11 @@ import { auth } from "../middleware/auth.js";
 import getProfile from "../controllers/userprofile.js";
 import { sendotp, signup, login } from "../controllers/Auth.js";
 import multer from "multer";
-import { AddImageTocloud, getcreations } from "../controllers/functionality.js";
+import {
+  AddImageTocloud,
+  getcreations,
+  getcreationsbyid,
+} from "../controllers/functionality.js";
 import {
   callback1,
   generatelink,
@@ -40,8 +44,9 @@ router.post("/login", login);
 router.post("/upload", upload1.single("file"), AddImageTocloud);
 router.get("/profile", auth, getProfile);
 router.get("/getcreations", auth, getcreations);
+router.post("/getcreationbyid", auth, getcreationsbyid);
 router.post("/twitfileupload", upload2.single("files"), generatelink1);
 router.get("/fileuploadcallback", callback1);
-router.get("/twitterauth", generatelink);
+router.post("/twitterauth", generatelink);
 router.get("/twittercallback", callback);
 export default router;
