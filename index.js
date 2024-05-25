@@ -7,7 +7,7 @@ dotenv.config({
   path: "./env",
 });
 const app = express();
-
+const port = process.env.port
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", userroutes);
 
-app.listen(3001, () => {
+app.listen(port, () => {
   console.log("server is listening on port 3001");
   connect();
 });

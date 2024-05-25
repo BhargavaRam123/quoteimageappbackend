@@ -179,7 +179,7 @@ export async function callback(req, res) {
     });
     console.log("Sending image tweet......");
     const resp = await loggedClient.v2.tweet({
-      text: "hello mf iam coding my ass off#234333",
+      text: "",
       media: {
         media_ids: [val.fileIdOnServer],
       },
@@ -188,7 +188,7 @@ export async function callback(req, res) {
       accessToken: accessToken,
       refreshToken,
       resp: resp,
-      message: "hello mf",
+      message: "hello",
     });
   } catch (error) {
     console.log("error occured in callback:", error);
