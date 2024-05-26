@@ -11,7 +11,7 @@ export async function generatelink1(req, res) {
       appKey: "EKxaPZOIE2hW3mQPxXRqOIpau",
       appSecret: "SoL7rehIOf2K5gi7wM9UvdUTxxmtWOEvgzYBh1AvATBpFihBWT",
     });
-    const callbackurl = "http://127.0.0.1:3001/api/auth/fileuploadcallback";
+    const callbackurl = "https://quoteimageappbackend.onrender.com/api/auth/fileuploadcallback";
     console.log("generating link...");
     const link = await client.generateAuthLink(callbackurl);
     console.log("link is:", link);
@@ -122,7 +122,7 @@ export async function generatelink(req, res) {
       clientSecret: "36uQ9lZlFxeg8ERxrKBrz_4d70SpsmZeVgbsXLQYgYaufykJhI",
     });
 
-    const callbackurl = "http://127.0.0.1:3001/api/auth/twittercallback";
+    const callbackurl = "https://quoteimageappbackend.onrender.com/api/auth/twittercallback";
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
       callbackurl,
       { scope: ["tweet.read", "tweet.write", "users.read", "offline.access"] }
@@ -148,7 +148,7 @@ export async function generatelink(req, res) {
 }
 export async function callback(req, res) {
   try {
-    const callbackurl = "http://127.0.0.1:3001/api/auth/twittercallback";
+    const callbackurl = "https://quoteimageappbackend.onrender.com/api/auth/twittercallback";
     const { state, code } = req.query;
     const val = await Twitter.findOne({ state: state });
     const codeVerifier = val.codeVerifier;
