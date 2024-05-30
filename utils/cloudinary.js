@@ -27,8 +27,10 @@ export default async function Cloudinary(
       }
     );
     console.log("result value:", res);
-    filesarr.map(async (file) => {
-     await fs.unlink(path.join(__dirname, 'uploads', file));
+    filesarr.map((file) => {
+      fs.unlink(path.join(__dirname, 'uploads', file),()=>{
+        console.log("files deleted")
+      });
     });
     return res;
   } catch (error) {
