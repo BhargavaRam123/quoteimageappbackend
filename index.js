@@ -8,12 +8,15 @@ dotenv.config({
 });
 const app = express();
 const port = process.env.PORT
-app.use(
-  cors({
-    origin: 'https://quoteimageapp-re5yort2o-bhargavs-projects-b1ccbd8a.vercel.app', // Explicitly specify your frontend's URL
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: 'https://quoteimageapp-re5yort2o-bhargavs-projects-b1ccbd8a.vercel.app', // Replace with your frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
 
 app.use(
   express.json({
