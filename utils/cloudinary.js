@@ -13,7 +13,7 @@ export default async function Cloudinary(
       api_secret: "ZggJybVVrVgNqAHrBBLGO5Heal8",
     });
     console.log("filesarr:", filesarr);
-    const str = __dirname + "uploads\\" + filesarr[1];
+    const str = path.join(__dirname, 'uploads', filesarr[1]);
     console.log("string value:", str);
     var res = "";
     await cloudinary.uploader.upload(
