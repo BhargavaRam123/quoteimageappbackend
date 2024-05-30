@@ -9,7 +9,7 @@ dotenv.config({
 const app = express();
 const port = process.env.PORT
 const corsOptions = {
-  origin: 'https://quoteimageapp-re5yort2o-bhargavs-projects-b1ccbd8a.vercel.app', // Replace with your frontend URL
+  origin: 'https://quoteimageapp-re5yort2o-bhargavs-projects-b1ccbd8a.vercel.app/', // Replace with your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
