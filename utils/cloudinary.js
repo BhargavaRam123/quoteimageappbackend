@@ -13,12 +13,12 @@ export default async function Cloudinary(
       api_secret: "ZggJybVVrVgNqAHrBBLGO5Heal8",
     });
     console.log("filesarr:", filesarr);
-    const str = __dirname + "uploads\\" + filesarr[0];
+    const str = __dirname + "uploads\\" + filesarr[1];
     console.log("string value:", str);
     var res = "";
     await cloudinary.uploader.upload(
       str,
-      { public_id: filesarr[0] },
+      { public_id: filesarr[1] },
       function (error, result) {
         console.log(result);
         res = result.secure_url;
