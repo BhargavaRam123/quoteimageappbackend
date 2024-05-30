@@ -28,9 +28,7 @@ export default async function Cloudinary(
     );
     console.log("result value:", res);
     filesarr.map((file) => {
-      fs.unlink(__dirname + "uploads\\" + file, (err) => {
-        if (err) console.log("Error occured while removing files", err);
-      });
+     fs.unlink(path.join(__dirname, 'uploads', file));
     });
     return res;
   } catch (error) {
