@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT
 app.use(
   cors({
-    origin: true,
+    origin: 'https://quoteimageapp-re5yort2o-bhargavs-projects-b1ccbd8a.vercel.app', // Explicitly specify your frontend's URL
     credentials: true,
   })
 );
