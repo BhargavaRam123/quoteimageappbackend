@@ -80,7 +80,7 @@ export async function callback1(req, res) {
     filesarr = fs.readdirSync("tweetimage/");
     console.log("filesarray value:", filesarr);
     const mediaid = await loggedClient.v1.uploadMedia(
-      "./tweetimage/" + filesarr[1]
+      "./tweetimage/" + filesarr[0]
     );
     await Twitter.findOneAndUpdate(
       { oauth_token: oauth_token },
