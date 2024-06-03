@@ -43,6 +43,7 @@ export async function generatelink1(req, res) {
     // return res.redirect(link);
   } catch (error) {
     console.log("error occured in generate link :", error.message);
+    console.log("error:",error)
     return res.json({
       message: "error",
     });
@@ -106,6 +107,7 @@ export async function callback1(req, res) {
     });
   } catch (error) {
     console.log("error occured in callback function:", error.message);
+    console.log("error:",error)
     return res.json({
       message: "tweet not sent in the client side",
     });
@@ -141,6 +143,7 @@ export async function generatelink(req, res) {
     });
   } catch (error) {
     console.log("error occured in the generatelink:", error.message);
+    console.log("error:",error)
     return res.json({
       message: "error occured",
     });
