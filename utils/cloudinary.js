@@ -19,7 +19,7 @@ export default async function Cloudinary(
     var res = "";
     await cloudinary.uploader.upload(
       str,
-      { public_id: filesarr[1] },
+      { public_id: filesarr[0] },
       function (error, result) {
         console.log(result);
         res = result.secure_url;
