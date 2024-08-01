@@ -180,6 +180,7 @@ export async function callback(req, res) {
       codeVerifier,
       redirectUri: callbackurl,
     });
+    
     console.log("Sending image tweet......");
     const resp = await loggedClient.v2.tweet({
       text: "",

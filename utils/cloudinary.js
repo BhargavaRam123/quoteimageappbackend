@@ -14,7 +14,7 @@ export default async function Cloudinary(
       api_secret: "ZggJybVVrVgNqAHrBBLGO5Heal8",
     });
     console.log("filesarr:", filesarr);
-    const str = path.join(__dirname, 'uploads', filesarr[1]);
+    const str = path.join(__dirname, "uploads", filesarr[0]);
     console.log("string value:", str);
     var res = "";
     await cloudinary.uploader.upload(
@@ -28,8 +28,8 @@ export default async function Cloudinary(
     );
     console.log("result value:", res);
     filesarr.map((file) => {
-      fs.unlink(path.join(__dirname, 'uploads', file),()=>{
-        console.log("files deleted")
+      fs.unlink(path.join(__dirname, "uploads", file), () => {
+        console.log("files deleted");
       });
     });
     return res;
