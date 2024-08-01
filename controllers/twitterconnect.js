@@ -11,7 +11,8 @@ export async function generatelink1(req, res) {
       appKey: "EKxaPZOIE2hW3mQPxXRqOIpau",
       appSecret: "SoL7rehIOf2K5gi7wM9UvdUTxxmtWOEvgzYBh1AvATBpFihBWT",
     });
-    const callbackurl = "https://hammerhead-app-ylxkm.ondigitalocean.app/api/auth/fileuploadcallback";
+    const callbackurl =
+      "https://walrus-app-4ce5z.ondigitalocean.app/api/auth/fileuploadcallback";
     console.log("generating link...");
     const link = await client.generateAuthLink(callbackurl);
     console.log("link is:", link);
@@ -43,7 +44,7 @@ export async function generatelink1(req, res) {
     // return res.redirect(link);
   } catch (error) {
     console.log("error occured in generate link :", error.message);
-    console.log("error:",error)
+    console.log("error:", error);
     return res.json({
       message: "error",
     });
@@ -107,7 +108,7 @@ export async function callback1(req, res) {
     });
   } catch (error) {
     console.log("error occured in callback function:", error.message);
-    console.log("error:",error)
+    console.log("error:", error);
     return res.json({
       message: "tweet not sent in the client side",
     });
@@ -116,15 +117,16 @@ export async function callback1(req, res) {
 
 export async function generatelink(req, res) {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const { email } = req.body;
-    console.log("email is :",email)
+    console.log("email is :", email);
     const client = new TwitterApi({
       clientId: "WmREOVdoeTUwUnFZaVJ2S0lyNWs6MTpjaQ",
       clientSecret: "36uQ9lZlFxeg8ERxrKBrz_4d70SpsmZeVgbsXLQYgYaufykJhI",
     });
 
-    const callbackurl = "https://hammerhead-app-ylxkm.ondigitalocean.app/api/auth/twittercallback";
+    const callbackurl =
+      "https://walrus-app-4ce5z.ondigitalocean.app/api/auth/twittercallback";
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
       callbackurl,
       { scope: ["tweet.read", "tweet.write", "users.read", "offline.access"] }
@@ -143,7 +145,7 @@ export async function generatelink(req, res) {
     });
   } catch (error) {
     console.log("error occured in the generatelink:", error.message);
-    console.log("error:",error)
+    console.log("error:", error);
     return res.json({
       message: "error occured",
     });
@@ -151,7 +153,8 @@ export async function generatelink(req, res) {
 }
 export async function callback(req, res) {
   try {
-    const callbackurl = "https://hammerhead-app-ylxkm.ondigitalocean.app/api/auth/twittercallback";
+    const callbackurl =
+      "https://walrus-app-4ce5z.ondigitalocean.app/api/auth/twittercallback";
     const { state, code } = req.query;
     const val = await Twitter.findOne({ state: state });
     const codeVerifier = val.codeVerifier;
@@ -180,7 +183,7 @@ export async function callback(req, res) {
       codeVerifier,
       redirectUri: callbackurl,
     });
-    
+
     console.log("Sending image tweet......");
     const resp = await loggedClient.v2.tweet({
       text: "",
